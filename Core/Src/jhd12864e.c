@@ -6,7 +6,7 @@
  */
 
 #include "jhd12864e.h"
-extern TIM_HandleTypeDef htim1;
+extern TIM_HandleTypeDef htim6;
 
 GLCD_t glcd_handle = {0};
 
@@ -196,8 +196,8 @@ static void config_GLCD(void)
 }
 static void delay_us(uint16_t us)
 {
-	__HAL_TIM_SET_COUNTER(&htim1,0);  // set the counter value a 0
-	while (__HAL_TIM_GET_COUNTER(&htim1) < us);  // wait for the counter to reach the us input in the parameter
+	__HAL_TIM_SET_COUNTER(&htim6,0);  // set the counter value a 0
+	while (__HAL_TIM_GET_COUNTER(&htim6) < us);  // wait for the counter to reach the us input in the parameter
 }
 
 void GLCD_Clear_All(void)

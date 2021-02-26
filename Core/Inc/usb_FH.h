@@ -42,7 +42,7 @@ FRESULT Open_File(char *fname);
 
 /* read data from the file
  * @ name : is the path to the file*/
-FRESULT Read_File (char *fname, void *buffer, uint8_t readSize);
+FRESULT Read_File (char *fname, void *buffer, uint8_t readSize, UINT* br);
 
 FRESULT Close_File(void);
 

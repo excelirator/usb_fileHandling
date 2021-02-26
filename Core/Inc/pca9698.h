@@ -15,10 +15,12 @@ extern C {
 
 // Include the hw-specific stm32fxxx_hal.h
 #include "stm32f4xx_hal.h"
+#include "main.h"
 
-uint16_t slave_Adresses_line1[2] = { 0x40, 0x42 };
-uint16_t slave_Adresses_line2[2] = { 0x40, 0x42 };
-uint16_t slave_Adresses_line3[2] = { 0x40, 0x42 };
+
+//uint16_t slave_Adresses_line1[2] = { 0x40, 0x42 };
+//uint16_t slave_Adresses_line2[2] = { 0x40, 0x42 };
+//uint16_t slave_Adresses_line3[2] = { 0x40, 0x42 };
 
 typedef struct {
 	I2C_HandleTypeDef *hi2cx;
@@ -27,9 +29,7 @@ typedef struct {
 	uint8_t number_of_slaves;
 	uint8_t *data_to_write_base;	//fixed, doesn't get modified
 	uint8_t *selected_data_to_write;
-#ifdef osCMSIS
 	EventBits_t uxBitstoSet;
-#endif
 }PCA9698_t;
 
 /* Commands */
@@ -115,6 +115,8 @@ typedef struct {
 	uint8_t cmd;
 	PCA9698_data_t fullData;
 } PCA9698_MultiRegBank;
+
+extern EventGroupHandle_t i2cTxEvent;
 
 uint8_t PCA9698_Init(I2C_HandleTypeDef *, uint16_t);
 uint8_t PCA9698_Config_AllOut(I2C_HandleTypeDef *, uint16_t);

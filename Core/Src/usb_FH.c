@@ -11,7 +11,8 @@
 extern char USBHPath[4];   /* USBH logical drive path */
 extern FATFS USBHFatFS;    /* File system object for USBH logical drive */
 extern FIL USBHFile;       /* File object for USBH */
-
+extern GLCD_t glcd_handle;
+extern int filecount;
 char path[20];
 char buf[20];
 
@@ -42,8 +43,8 @@ void Unmount_USB (void)
 void getfilecount(void)
 {
 	USB_GetFileCount("/");
-	char buf[20];
-	sprintf(buf,"file count is %d", filecount);
+//	char buf[20];
+//	sprintf(buf,"file count is %d", filecount);
 	//GLCD_printLine(1,buf);
 }
 
@@ -63,7 +64,7 @@ void getfilename(void)
 FRESULT Scan_USB (count_or_name flag, char* pat)
 {
     DIR dir;
-    UINT i;
+//    UINT i;
     sprintf (path, "%s",pat);
 
     fresult = f_opendir(&dir, path);                       /* Open the directory */
@@ -129,8 +130,9 @@ FRESULT Open_File(char *fname)
 
 
 
-FRESULT Read_File (char *fname, void *buffer, uint8_t readSize)
+FRESULT Read_File (char *fname, void *buffer, uint8_t readSize, UINT* br)
 {
+
 	fresult = f_read (&USBHFile, buffer, readSize, &br);
 	if (fresult != FR_OK)
 	{

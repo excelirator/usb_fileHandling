@@ -155,9 +155,6 @@ HAL_StatusTypeDef PCA9698_Adv_Init(I2C_HandleTypeDef *hi2c,
 	line_selected->data_to_write_base = data_base;
 	line_selected->selected_data_to_write = data_base;
 	line_selected->number_of_slaves = slaveCount;
-#ifdef osCMSIS
-	line_selected->xTaskToNotify = NULL;
-#endif
 
 	uint8_t initData[8] = { PCA9698_CMD_MSC, PCA9698_MSC_CHANGE_ON_STOP, PCA9698_CMD_AI_MSK | PCA9698_CMD_IO_CONFIG };
 	while(slaveCount > 0)
@@ -221,7 +218,6 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
 	  /* Control reaches when all the slaves have been communicated with */
 	  active_line->selected_slave = active_line->slaveAddress_base;	//reset the pointer to point to first slave
 	  active_line->selected_data_to_write = active_line->data_to_write_base; // reset pointer to point to first data element
-#ifdef osCMSIS
 	  /* last slave of last line is communicated with, notify i2c task to resume */
 		if(hi2c->Instance==I2C1)
 			active_line->uxBitstoSet = 0x01;
@@ -232,9 +228,8 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
 		// --- the above logic can be optimized --- //
 
 	  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-	  xEventGroupSetBitsFromISR(i2cTxEvent, uxBitsToSet, &xHigherPriorityTaskWoken);
+	  xEventGroupSetBitsFromISR(i2cTxEvent, active_line->uxBitstoSet, &xHigherPriorityTaskWoken);
 	  portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
-#endif
 	}
 	else
 	{
